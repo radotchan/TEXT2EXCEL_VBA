@@ -1,4 +1,5 @@
 Sub Txt_2_Excel()
+
 Dim StartTime As Double
 Dim MinutesElapsed As String
     
@@ -13,26 +14,32 @@ Save
     
 MinutesElapsed = Format((Timer - StartTime) / 86400, "hh:mm:ss")
 MsgBox "Waktu Proses " & MinutesElapsed & " menit", vbInformation
-end sub
 
-Sub TextToExcel
-Dim FilestoOpen
-Dim x as integer
-Dim wkball as Workbook
-Dim sDelimiter as String
+end sub
+*********************************************************************************
+
+Sub TextToExcel ()
+
+Dim OpenFiles
+Dim x As Integer
+Dim wkbAll As Workbook
+Dim wkbTemp As Workbook
+Dim sDelimiter As String
+
 On Error GoTo ErrHandler
 Application.ScreenUpdating = False
   
 sDelimiter = ";"
   
-FilestoOpen = Application.GetOpenFilename (FileFilter:="Text Files (*.txt), *.txt", Multiselect:= True, Title:="Text Files to Open")
-If TypeName (FilesToOpen) = "Boolean" Then
-  MsgBox "Tidak ada file yang di pilih..."
+OpenFiles = Application.GetOpenFilename (FileFilter:="Text Files (*.txt), *.txt", Multiselect:= True, Title:="Text Files to Open")
+If TypeName (OpenFiles) = "Boolean" Then
+  MsgBox "There is no file selected"
   GoTo ExitHandler
+
 End If
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 x = 1
-Set wkbTemp = Workbooks.Open(Filename:=FilesToOpen(x))
+Set wkbTemp = Workbooks.Open(Filename:=OpenFiles(x))
 wkbTemp.Sheets(1).Copy
 Set wkbAll = ActiveWorkbook
 wkbTemp.Close (False)
