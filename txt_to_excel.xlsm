@@ -1,0 +1,62 @@
+Sub Txt_2_Excel()
+Dim StartTime As Double
+Dim MinutesElapsed As String
+    
+StartTime = Timer
+    
+TextToExcel
+InsertGabung
+Trim
+DeleteJunk
+mAutoWidth
+Save
+    
+MinutesElapsed = Format((Timer - StartTime) / 86400, "hh:mm:ss")
+MsgBox "Waktu Proses " & MinutesElapsed & " menit", vbInformation
+end sub
+
+Sub TextToExcel
+Dim FilestoOpen
+Dim x as integer
+Dim wkball as Workbook
+Dim sDelimiter as String
+On Error GoTo ErrHandler
+Application.ScreenUpdating = False
+  
+sDelimiter = ";"
+  
+FilestoOpen = Application.GetOpenFilename (FileFilter:="Text Files (*.txt), *.txt", Multiselect:= True, Title:="Text Files to Open")
+If TypeName (FilesToOpen) = "Boolean" Then
+  MsgBox "Tidak ada file yang di pilih..."
+  GoTo ExitHandler
+End If
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+x = 1
+Set wkbTemp = Workbooks.Open(Filename:=FilesToOpen(x))
+wkbTemp.Sheets(1).Copy
+Set wkbAll = ActiveWorkbook
+wkbTemp.Close (False)
+wkbAll.Worksheets(x).Columns("A:A").TextToColumns Destination:=Range("A1"), DataType:=xlDelimited, TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=True, OtherChar:=";"
+    x = x + 1
+While x <= UBound(FilesToOpen)
+        Set wkbTemp = Workbooks.Open(Filename:=FilesToOpen(x))
+        With wkbAll
+            wkbTemp.Sheets(1).Move After:=.Sheets(.Sheets.Count)
+            .Worksheets(x).Columns("A:A").TextToColumns Destination:=Range("A1"), DataType:=xlDelimited, TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=True, OtherChar:=""
+        End With
+        x = x + 1
+Wend
+ 
+ExitHandler:
+    Application.ScreenUpdating = True
+    Set wkbAll = Nothing
+    Set wkbTemp = Nothing
+    Exit Sub
+
+ErrHandler:
+    MsgBox Err.Description
+    Resume ExitHandler
+    
+
+End Sub
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
